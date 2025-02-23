@@ -1,5 +1,15 @@
-wait connectToDatabase();
-  const volunteers = await db.collection("volunteers").find({}).toArray();
+import { getServerSession } from "next-auth";
+import connectToDatabase from "../../lib/db";
+import Volunteer from "../../models/Volunteer";
+
+export default async function VolunteersPage() {
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied volunteer</p>;
+  }
+
+  await connectToDatabase();
+  const volunteers = await Volunteer.find({});
 
   return (
     <div>

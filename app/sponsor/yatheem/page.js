@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { getServerSession } from "next-auth";
 
-export default function YatheemSponsorPage() {
+export default async function YatheemSponsorPage() {
+  const session = await getServerSession();
   const [amount, setAmount] = useState("2500");
 
   const handleSubmit = async (e) => {
@@ -10,7 +12,7 @@ export default function YatheemSponsorPage() {
     await fetch("/api/sponsorships/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "Yatheem", amount, userId: "1" }),
+      body: JSON.stringify({ type: "Yatheem", amount, userId: session?.user.id || "guest" }),
     });
     setAmount("2500");
   };

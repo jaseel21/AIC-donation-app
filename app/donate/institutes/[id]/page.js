@@ -1,6 +1,10 @@
-import { useState } from "react";
+"use client";
 
-export default function InstituteDonationPage({ params }) {
+import { useState } from "react";
+import { getServerSession } from "next-auth";
+
+export default async function InstituteDonationPage({ params }) {
+  const session = await getServerSession();
   const [amount, setAmount] = useState("");
 
   const handleSubmit = async (e) => {
@@ -8,7 +12,7 @@ export default function InstituteDonationPage({ params }) {
     await fetch("/api/donations/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount, type: "Institute", instituteId: params.id, userId: "1" }),
+      body: JSON.stringify({ amount, type: "Institute", instituteId: params.id, userId: session?.user.id || "guest" }),
     });
     setAmount("");
   };

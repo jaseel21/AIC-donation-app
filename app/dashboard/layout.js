@@ -1,9 +1,14 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
 
-export default function DashboardLayout({ children }) {
+export default async function DashboardLayout({ children }) {
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
       <aside className="w-64 bg-gray-800 text-white p-4">
         <h2 className="text-xl mb-4">Admin Dashboard</h2>
         <nav>
@@ -20,10 +25,10 @@ export default function DashboardLayout({ children }) {
             <li><Link href="/dashboard/agents" className="block p-2 hover:bg-gray-700">Agents</Link></li>
             <li><Link href="/dashboard/settings" className="block p-2 hover:bg-gray-700">Settings</Link></li>
             <li><Link href="/dashboard/reports" className="block p-2 hover:bg-gray-700">Reports</Link></li>
+            <li><Link href="/auth/signout" className="block p-2 hover:bg-gray-700">Sign Out</Link></li>
           </ul>
         </nav>
       </aside>
-      {/* Main Content */}
       <main className="flex-1 p-6 bg-gray-100">{children}</main>
     </div>
   );

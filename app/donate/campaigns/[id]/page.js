@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { getServerSession } from "next-auth";
 
-export default function CampaignDonationPage({ params }) {
+export default async function CampaignDonationPage({ params }) {
+  const session = await getServerSession();
   const [amount, setAmount] = useState("");
 
   const handleSubmit = async (e) => {
@@ -10,7 +12,7 @@ export default function CampaignDonationPage({ params }) {
     await fetch("/api/donations/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount, type: "Campaign", campaignId: params.id, userId: "1" }),
+      body: JSON.stringify({ amount, type: "Campaign", campaignId: params.id, userId: session?.user.id || "guest" }),
     });
     setAmount("");
   };

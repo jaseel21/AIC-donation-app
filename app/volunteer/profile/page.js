@@ -2,6 +2,9 @@ import { getServerSession } from "next-auth";
 
 export default async function ProfilePage() {
   const session = await getServerSession();
+  if (!session || session.user.role !== "Volunteer") {
+    return <p>Access Denied</p>;
+  }
 
   return (
     <div>

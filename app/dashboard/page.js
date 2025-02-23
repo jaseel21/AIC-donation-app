@@ -1,16 +1,35 @@
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import connectToDatabase from "../lib/db";
+import { redirect } from "next/navigation";
+import Donation from "../models/Donation";
+import Box from "../models/Box";
 
 export default async function DashboardPage() {
   const session = await getServerSession();
-  if (!session || !["Super Admin", "Admin", "Manager"].includes(session.user?.role)) {
-    redirect("/api/auth/signin");
+  
+  if (!session?.user?.role) {
+    redirect("/auth/signin");
+    return null;
   }
 
-  const db = await connectToDatabase();
-  const totalDonations = await db.collection("donations").countDocuments();
-  const activeBoxes = await db.collection("boxes").countDocuments({ status: "Active" });
+  // Optional: Restrict to specific roles (e.g., Admin, Super Admin)
+  const requiredRole = "User"; // Minimum role required (adjust as needed)
+  const rolesHierarchy = {
+    "User": 0,
+    "Volunteer": 1,
+    "Staff": 2,
+    "Admin": 3,
+    "Manager": 4,
+    "Super Admin": 5
+  };
+
+  if (rolesHierarchy[session.user.role] < rolesHierarchy[requiredRole]) {
+    redirect("/auth/signin");
+    return null;
+  }
+  await connectToDatabase();
+  const totalDonations = await Donation.countDocuments();
+  const activeBoxes = await Box.countDocuments({ status: "Active" });
 
   return (
     <div>

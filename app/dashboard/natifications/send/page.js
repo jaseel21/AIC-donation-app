@@ -1,14 +1,22 @@
-import { useState } from "react";
+"use client";
 
-export default function SendNotificationPage() {
+import { useState } from "react";
+import { getServerSession } from "next-auth";
+
+export default async function SendNotificationPage() {
   const [message, setMessage] = useState("");
+
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await fetch("/api/notifications/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, channel: "SMS" }), // Example channel
+      body: JSON.stringify({ message, channel: "SMS" }),
     });
     setMessage("");
   };

@@ -1,8 +1,9 @@
 import connectToDatabase from "../../lib/db";
+import Campaign from "../../models/Campaign";
 
 export default async function CampaignsPage() {
-  const db = await connectToDatabase();
-  const campaigns = await db.collection("campaigns").find({}).toArray();
+  await connectToDatabase();
+  const campaigns = await Campaign.find({});
 
   return (
     <div>

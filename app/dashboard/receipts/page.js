@@ -1,8 +1,15 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../lib/db";
+import Receipt from "../../models/Receipt";
 
 export default async function ReceiptsPage() {
-  const db = await connectToDatabase();
-  const receipts = await db.collection("receipts").find({}).toArray();
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const receipts = await Receipt.find({});
 
   return (
     <div>

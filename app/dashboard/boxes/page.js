@@ -1,9 +1,17 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../lib/db";
+import Box from "../../models/Box";
 
 export default async function BoxesPage() {
-  const db = await connectToDatabase();
-  const totalBoxes = await db.collection("boxes").countDocuments();
-  const activeBoxes = await db.collection("boxes").countDocuments({ status: "Active" });
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const boxes = await Box.find({});
+  const totalBoxes = boxes.length;
+  const activeBoxes = boxes.filter((b) => b.status === "Active").length;
   const deadBoxes = totalBoxes - activeBoxes;
 
   return (

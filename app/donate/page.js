@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { getServerSession } from "next-auth";
 
-export default function DonatePage() {
+export default async function DonatePage() {
+  const session = await getServerSession();
   const [amount, setAmount] = useState("");
   const [type, setType] = useState("General");
 
@@ -11,7 +13,7 @@ export default function DonatePage() {
     await fetch("/api/donations/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount, type, userId: "1" }), // Replace with real user ID
+      body: JSON.stringify({ amount, type, userId: session?.user.id || "guest" }),
     });
     setAmount("");
   };

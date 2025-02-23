@@ -1,8 +1,9 @@
 import connectToDatabase from "../../lib/db";
+import Institute from "../../models/Institute";
 
 export default async function InstitutesPage() {
-  const db = await connectToDatabase();
-  const institutes = await db.collection("institutes").find({}).toArray();
+  await connectToDatabase();
+  const institutes = await Institute.find({});
 
   return (
     <div>

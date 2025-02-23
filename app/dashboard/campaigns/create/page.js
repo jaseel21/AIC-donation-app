@@ -1,7 +1,15 @@
-import { useState } from "react";
+"use client";
 
-export default function CreateCampaignPage() {
+import { useState } from "react";
+import { getServerSession } from "next-auth";
+
+export default async function CreateCampaignPage() {
   const [name, setName] = useState("");
+
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -10,7 +18,7 @@ export default function CreateCampaignPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
     });
-    setName(""); // Reset form
+    setName("");
   };
 
   return (

@@ -1,8 +1,15 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../lib/db";
+import BoxCollection from "../../models/BoxCollection";
 
 export default async function HistoryPage() {
-  const db = await connectToDatabase();
-  const collections = await db.collection("boxCollections").find({}).toArray();
+  const session = await getServerSession();
+  if (!session || session.user.role !== "Volunteer") {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const collections = await BoxCollection.find({});
 
   return (
     <div>
@@ -10,7 +17,7 @@ export default async function HistoryPage() {
       <ul className="space-y-2">
         {collections.map((collection) => (
           <li key={collection._id} className="p-2 bg-white rounded shadow">
-            Box ID: {collection.boxId} - Date: {collection.date}
+            Box ID: {collection.boxId} - Date: {collection.date.toLocaleString()}
           </li>
         ))}
       </ul>

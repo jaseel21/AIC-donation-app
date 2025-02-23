@@ -1,8 +1,15 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../lib/db";
+import Campaign from "../../models/Campaign";
 
 export default async function CampaignsPage() {
-  const db = await connectToDatabase();
-  const campaigns = await db.collection("campaigns").find({}).toArray();
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const campaigns = await Campaign.find({});
 
   return (
     <div>

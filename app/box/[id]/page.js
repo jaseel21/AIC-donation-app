@@ -1,8 +1,9 @@
 import connectToDatabase from "../../lib/db";
+import Box from "../../models/Box";
 
 export default async function BoxDetailsPage({ params }) {
-  const db = await connectToDatabase();
-  const box = await db.collection("boxes").findOne({ _id: params.id });
+  await connectToDatabase();
+  const box = await Box.findById(params.id);
 
   if (!box) return <p>Box not found</p>;
 

@@ -1,8 +1,15 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../lib/db";
+import Donation from "../../models/Donation";
 
 export default async function DonationsPage() {
-  const db = await connectToDatabase();
-  const donations = await db.collection("donations").find({}).toArray();
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const donations = await Donation.find({});
 
   return (
     <div>

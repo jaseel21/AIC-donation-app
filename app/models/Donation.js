@@ -9,5 +9,9 @@ const donationSchema = new mongoose.Schema({
   status: { type: String, enum: ["Pending", "Completed"], default: "Pending" },
   createdAt: { type: Date, default: Date.now },
 });
+ 
 
-module.exports = mongoose.model('Donation', donationSchema);
+const Donation = mongoose.models.Donation || mongoose.model("Donation", donationSchema);
+
+
+export default Donation;

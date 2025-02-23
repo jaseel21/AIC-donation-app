@@ -1,14 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { getServerSession } from "next-auth";
 
-export default function AddBoxPage() {
-  const [serialNumber, setSerialNumber] = useState("jazel");
+export default async function AddBoxPage() {
+  const session = await getServerSession();
+  if (!session || session.user.role !== "Volunteer") {
+    return <p>Access Denied</p>;
+  }
+
+  const [serialNumber, setSerialNumber] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(serialNumber);
-    await fetch("/api/boxes/create", {  // Line 10: This is where the error occurs
+    await fetch("/api/boxes/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ serialNumber, holderName: "Unknown", status: "Active" }),

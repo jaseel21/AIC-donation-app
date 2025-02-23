@@ -1,8 +1,15 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../../lib/db";
+import Donation from "../../../models/Donation";
 
 export default async function DonationDetailsPage({ params }) {
-  const db = await connectToDatabase();
-  const donation = await db.collection("donations").findOne({ _id: params.id });
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const donation = await Donation.findById(params.id);
 
   if (!donation) return <p>Donation not found</p>;
 
@@ -13,7 +20,6 @@ export default async function DonationDetailsPage({ params }) {
       <p>Amount: ₹{donation.amount}</p>
       <p>Type: {donation.type}</p>
       <p>Status: {donation.status}</p>
-      {/* Add receipt generation logic here */}
     </div>
   );
 }

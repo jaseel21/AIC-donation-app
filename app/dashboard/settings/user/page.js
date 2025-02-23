@@ -1,8 +1,15 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../../lib/db";
+import User from "../../../models/User";
 
 export default async function UsersPage() {
-  const db = await connectToDatabase();
-  const users = await db.collection("users").find({}).toArray();
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const users = await User.find({});
 
   return (
     <div>

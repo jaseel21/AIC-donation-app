@@ -1,8 +1,15 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../lib/db";
+import Institute from "../../models/Institute";
 
 export default async function InstitutesPage() {
-  const db = await connectToDatabase();
-  const institutes = await db.collection("institutes").find({}).toArray();
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const institutes = await Institute.find({});
 
   return (
     <div>

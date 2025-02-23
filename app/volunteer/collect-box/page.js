@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { getServerSession } from "next-auth";
 
-export default function CollectBoxPage() {
+export default async function CollectBoxPage() {
+  const session = await getServerSession();
+  if (!session || session.user.role !== "Volunteer") {
+    return <p>Access Denied</p>;
+  }
+
   const [boxId, setBoxId] = useState("");
 
   const handleSubmit = async (e) => {
@@ -26,8 +32,6 @@ export default function CollectBoxPage() {
           placeholder="Box ID"
           className="border p-2 w-full"
         />
-
-  
         <button type="submit" className="bg-blue-500 text-white p-2 rounded">Collect</button>
       </form>
     </div>

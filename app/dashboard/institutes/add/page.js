@@ -1,7 +1,15 @@
-import { useState } from "react";
+"use client";
 
-export default function AddInstitutePage() {
+import { useState } from "react";
+import { getServerSession } from "next-auth";
+
+export default async function AddInstitutePage() {
   const [name, setName] = useState("");
+
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,8 +1,15 @@
+import { getServerSession } from "next-auth";
 import connectToDatabase from "../../lib/db";
+import Sponsorship from "../../models/Sponsorship";
 
 export default async function SponsorshipsPage() {
-  const db = await connectToDatabase();
-  const sponsorships = await db.collection("sponsorships").find({}).toArray();
+  const session = await getServerSession();
+  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+    return <p>Access Denied</p>;
+  }
+
+  await connectToDatabase();
+  const sponsorships = await Sponsorship.find({});
 
   return (
     <div>

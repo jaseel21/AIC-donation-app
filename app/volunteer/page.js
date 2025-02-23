@@ -1,9 +1,10 @@
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 export default async function VolunteerPage() {
   const session = await getServerSession();
-  if (!session || session.user.role !== "Volunteer") redirect("/api/auth/signin");
+  if (!session || session.user.role !== "Volunteer") {
+    return <p>Access Denied</p>;
+  }
 
   return (
     <div>
