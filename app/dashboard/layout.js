@@ -27,7 +27,7 @@ export default async function DashboardLayout({ children }) {
             <li><Link href="/dashboard/agents" className="block p-2 hover:bg-gray-700">Agents</Link></li>
             <li><Link href="/dashboard/settings" className="block p-2 hover:bg-gray-700">Settings</Link></li>
             <li><Link href="/dashboard/reports" className="block p-2 hover:bg-gray-700">Reports</Link></li>
-            <li><Link href="/auth/signout" className="block p-2 hover:bg-gray-700">Sign Out</Link></li>
+            <li><Link href="/auth/admin/signout" className="block p-2 hover:bg-gray-700">Sign Out</Link></li>
           </ul>
         </nav>
       </aside>

@@ -5,9 +5,9 @@ import { getServerSession } from "next-auth";
 
 export default async function AddBoxPage() {
   const session = await getServerSession();
-  if (!session || session.user.role !== "Volunteer") {
-    return <p>Access Denied</p>;
-  }
+  // if (!session || session.user.role !== "Volunteer") {
+  //   return <p>Access Denied</p>;
+  // }
 
   const [serialNumber, setSerialNumber] = useState("");
 

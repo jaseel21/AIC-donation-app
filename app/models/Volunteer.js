@@ -1,11 +1,25 @@
 const mongoose = require('mongoose');
+const bcrypt = require("bcryptjs"); 
 
 const volunteerSchema = new mongoose.Schema({
-  name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  role: { type: String, default: "Volunteer" },
-  tasks: [{ task: String, assignedAt: { type: Date, default: Date.now } }],
+  password: { type: String, required: true },
+  role: { 
+    type: String, 
+    enum: ["Super Admin", "Manager", "Admin", "Staff", "Volunteer", "User"], 
+    default: "Volunteer",
+    required: true 
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Volunteer', volunteerSchema);
+volunteerSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+
+
+module.exports = mongoose.models.Volunteer || mongoose.model("Volunteer", volunteerSchema);

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 export default async function Dashboard() {
     const session = await getServerSession(authOptions);
 
+    
     if (!session || !["Admin", "Staff", "Manager", "Super Admin"].includes(session.user?.role)) {
         return redirect("/unauthorized"); // Redirect to an unauthorized page or login
     }
