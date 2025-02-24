@@ -13,6 +13,7 @@ export default async function Dashboard() {
         <div className="text-black">
             <h1>Welcome to the Dashboard</h1>
             <p>Only authorized users can see this page.</p>
+            
         </div>
     );
 }

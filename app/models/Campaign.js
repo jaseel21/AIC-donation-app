@@ -6,4 +6,5 @@ const campaignSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Campaign', campaignSchema);
+
+module.exports = mongoose.models.Campaign || mongoose.model("Campaign", campaignSchema);

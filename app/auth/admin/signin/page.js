@@ -57,7 +57,7 @@ if (!session) {
 
             if (user) {
                 console.log("User:", user); // { id, email, role, lastLogin }
-                router.push("/");
+                router.push("/dashboard");
             } else {
                 console.log("Executing 'No session found' block"); // Confirm execution
                 setError("No session found"); // This block runs here
@@ -72,7 +72,7 @@ if (!session) {
     return (
         <div className="min-h-screen text-black flex items-center justify-center bg-gray-100">
             <div className="bg-white p-6 rounded shadow-md w-96">
-                <h1 className="text-2xl mb-4">Sign In</h1>
+                <h1 className="text-2xl mb-4">Admin Sign In</h1>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         type="email"
