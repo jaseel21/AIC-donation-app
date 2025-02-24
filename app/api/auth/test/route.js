@@ -32,12 +32,12 @@ export async function POST(req) {
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+   
 
     // Create and save admin user
     const adminUser = new User({
       email,
-      password: hashedPassword,
+      password: password,
       role: "Admin",
     });
 

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
+import {authOptions} from "../api/auth/[...nextauth]/route"
 
 export default async function DashboardLayout({ children }) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
-    return <p>Access Denied</p>;
+    return <p>Access Denied to dash</p>;
   }
 
   return (

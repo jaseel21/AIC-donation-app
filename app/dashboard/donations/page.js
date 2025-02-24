@@ -1,19 +1,19 @@
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import connectToDatabase from "../../lib/db";
 import Donation from "../../models/Donation";
 
 export default async function DonationsPage() {
-  const session = await getServerSession();
-  if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
-    return <p>Access Denied</p>;
-  }
+  // const session = await getServerSession();
+  // if (!session || !["Super Admin", "Manager", "Admin"].includes(session.user.role)) {
+  //   return <p>Access Denied</p>;
+  // }
 
   await connectToDatabase();
   const donations = await Donation.find({});
 
   return (
-    <div>
-      <h1 className="text-2xl mb-4">Donation Management</h1>
+    <div className="text-black">
+      <h1 className="text-2xl mb-4 ">Donation Management</h1>
       <table className="w-full border-collapse">
         <thead>
           <tr className="bg-gray-200">
